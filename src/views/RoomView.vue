@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { io } from 'socket.io-client'
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
+import { usePlayerStore } from '@/stores'
+import { useRoute } from 'vue-router'
 
-const player = ref('')
+const player = usePlayerStore()
+const route = useRoute()
 
 onMounted(() => {
-  const socketPlayer = io('/player', {})
-
-  socketPlayer.on('connect', () => {
-    player.value = socketPlayer.id
-  })
-
-  socketPlayer.emit('enter-the-room', '1e4601b6-aefe-4aef-ab10-3ab151f77cc7')
+  player.listen().joinTheRoom(route.params.id.toString())
 })
 </script>
 
 <template>
-  <div>Player: {{ player }}</div>
+  <div>Player: {{ player.character }}</div>
 </template>
 
 <style scoped></style>

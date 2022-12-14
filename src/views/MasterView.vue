@@ -1,33 +1,35 @@
 <script lang="ts" setup>
-import { io } from 'socket.io-client'
-import { onMounted, ref } from 'vue'
-import { uuid4, MersenneTwister19937 } from 'random-js'
+import { onMounted } from 'vue'
+import { dice, MersenneTwister19937 } from 'random-js'
 
-const players = ref<Array<string>>([])
+import { useMasterStore } from '@/stores'
+
+const master = useMasterStore()
 
 onMounted(() => {
-  const socketMaster = io('/master', {})
-  const key = uuid4(MersenneTwister19937.autoSeed())
-
-  console.log('room id: ', key)
-
-  socketMaster.on('joined-the-room', (id) => {
-    players.value.push(id)
-  })
-
-  socketMaster.on('leave-the-room', (id) => {
-    const index = players.value.findIndex((player) => player === id)
-    if (index > -1) players.value.splice(index, 1)
-  })
-
-  socketMaster.emit('enter-the-room', '1e4601b6-aefe-4aef-ab10-3ab151f77cc7')
+  master.listen()
 })
 </script>
 
 <template>
-  <div>
-    <p v-for="(player, i) in players" :key="i">{{ i }}: {{ player }}</p>
-  </div>
+  <v-main>
+    <v-container>
+      <v-row>
+        <v-col>
+          <div>Room ID: {{ master.roomID }}</div>
+        </v-col>
+        <v-divider></v-divider>
+        <v-col>
+          {{ dice(20, 2)(MersenneTwister19937.autoSeed()) }}
+        </v-col>
+        <v-col>
+          <div>
+            <p v-for="(player, i) in master.players" :key="i">{{ i }}: {{ player }}</p>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
 </template>
 
 <style scoped></style>
