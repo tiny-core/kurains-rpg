@@ -56,12 +56,14 @@ interface NPC {
   }
 }
 
+interface MonsterNPC extends NPC {}
+
 interface HumanNPC extends NPC {
   age: number
   born: string
   origin: string
   class: string
-  rank: number // 0 - 4
+  prestige: number // 0 - 4
 
   protection: string
   resistance: string
@@ -70,9 +72,12 @@ interface HumanNPC extends NPC {
   rituals: Array<Rituals>
 }
 
+interface Character extends HumanNPC {}
+
 interface Player {
   email: string
   name: string
-
-  character: HumanNPC
+  connected: boolean
+  isTheMaster: boolean
+  characters: Array<Character>
 }

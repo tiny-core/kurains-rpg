@@ -7,12 +7,12 @@ const player = usePlayerStore()
 const route = useRoute()
 
 onMounted(() => {
-  player.listen().joinTheRoom(route.params.id.toString())
+  player.listen().joinTheRoom(route.params.id as string)
 })
 </script>
 
 <template>
-  <div>Player: {{ player.character }}</div>
+  <div>Player: {{ player.characters }}</div>
 </template>
 
 <style scoped></style>

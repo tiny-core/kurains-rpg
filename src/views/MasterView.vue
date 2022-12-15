@@ -22,7 +22,7 @@ onMounted(() => {
         <v-col>
           {{ dice(20, 2)(MersenneTwister19937.autoSeed()) }}
         </v-col>
-        <v-col>
+        <v-col cols="12">
           <div>
             <p v-for="(player, i) in master.players" :key="i">{{ i }}: {{ player }}</p>
           </div>

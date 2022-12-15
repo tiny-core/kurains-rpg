@@ -6,14 +6,15 @@ let socket = {} as Socket
 export const useMasterStore = defineStore('master', {
   state: () => ({
     roomID: '',
-    players: [] as Array<string>
+    account: {} as Player,
+    players: [] as Array<Player>
   }),
 
   getters: {},
 
   actions: {
     listen() {
-      socket = io('/master', {})
+      socket = io({})
 
       socket.on('joined-the-room', (id) => {
         this.players.push(id)
@@ -27,6 +28,8 @@ export const useMasterStore = defineStore('master', {
       socket.on('room-id', (id) => (this.roomID = id))
 
       return this
-    }
+    },
+
+    persist: { enabled: true }
   }
 })

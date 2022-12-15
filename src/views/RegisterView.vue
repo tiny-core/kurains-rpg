@@ -18,21 +18,21 @@ const router = useRouter()
             <v-card-text>
               <v-form>
                 <v-text-field label="Nome de usuário" variant="solo"></v-text-field>
+                <v-text-field label="Email" variant="solo"></v-text-field>
                 <v-text-field label="Senha" type="password" variant="solo"></v-text-field>
+                <v-text-field label="Repetir Senha" type="password" variant="solo"></v-text-field>
               </v-form>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-              <v-btn variant="plain" prepend-icon="mdi-lock-question">Recuperar</v-btn>
               <v-spacer></v-spacer>
               <v-btn
                 variant="plain"
-                prepend-icon="mdi-account-plus"
-                @click="router.push({ name: 'register' })"
+                prepend-icon="mdi-login-variant"
+                @click="router.push({ name: 'home' })"
+                >Login</v-btn
               >
-                Cadastrar
-              </v-btn>
-              <v-btn variant="plain" prepend-icon="mdi-login-variant">Entrar</v-btn>
+              <v-btn variant="plain" prepend-icon="mdi-account-plus">Cadastrar</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
