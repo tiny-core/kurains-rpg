@@ -1,7 +1,8 @@
 import { fileURLToPath, URL } from 'node:url'
 
-import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
+
 import socketIo from './services/socket-io'
 
 // https://vitejs.dev/config/

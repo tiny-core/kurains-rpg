@@ -1,6 +1,5 @@
-import { uuid4, MersenneTwister19937 } from 'random-js'
-
-import type { Socket, Namespace } from 'socket.io'
+import { MersenneTwister19937, uuid4 } from 'random-js'
+import type { Namespace, Socket } from 'socket.io'
 
 export default (master: Socket, player: Namespace) => {
   console.log('[io] master connected: ', master.id)

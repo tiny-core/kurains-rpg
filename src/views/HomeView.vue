@@ -1,42 +1,22 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { ROUTE_TO } from '@/router'
+
+//------------------------------------------------------------------------------------------------
+//  Variables
+//------------------------------------------------------------------------------------------------
 const router = useRouter()
+
+//------------------------------------------------------------------------------------------------
+//  Vue hooks
+//------------------------------------------------------------------------------------------------
+onBeforeMount(() => router.push(ROUTE_TO.SIGN_IN))
 </script>
 
 <template>
-  <v-main>
-    <v-container class="fill-height" fluid>
-      <v-row class="fill-height" justify="center" align="center">
-        <v-col sm="8" md="6" lg="4">
-          <v-card>
-            <v-card-title>
-              <v-icon size="small">mdi-login</v-icon>
-              <span class="ml-2">Login</span>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-              <v-form>
-                <v-text-field label="Nome de usuário" variant="solo"></v-text-field>
-                <v-text-field label="Senha" type="password" variant="solo"></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-              <v-btn variant="plain" prepend-icon="mdi-lock-question">Recuperar</v-btn>
-              <v-spacer></v-spacer>
-              <v-btn
-                variant="plain"
-                prepend-icon="mdi-account-plus"
-                @click="router.push({ name: 'register' })"
-              >
-                Cadastrar
-              </v-btn>
-              <v-btn variant="plain" prepend-icon="mdi-login-variant">Entrar</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-main>
+  <v-main>Home</v-main>
 </template>
+
+<style scoped></style>

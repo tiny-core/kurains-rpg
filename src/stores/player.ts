@@ -1,36 +1,29 @@
 import { defineStore } from 'pinia'
-import { io, Socket } from 'socket.io-client'
+import type * as zod from 'zod'
 
-let socket = {} as Socket
+import type { AccountSchema, PlayerSchema } from '@/schemas/player'
 
 export const usePlayerStore = defineStore('player', {
   state: (): Player => ({
-    email: '',
-    name: '',
-    connected: false,
-    isTheMaster: false,
+    account: { uid: '', email: '', displayName: '', photoURL: '', refreshToken: '' },
     characters: []
   }),
 
-  getters: {},
+  getters: {
+    isAuthenticated: (store): boolean => store.account.uid !== ''
+  },
 
   actions: {
-    addItem(item: Item) {},
-
-    removeItem(id: string) {},
-
-    listen() {
-      socket = io({})
-
-      socket.on('joined-the-room', (connected) => (this.connected = connected))
-
-      return this
-    },
-
-    joinTheRoom(id: string) {
-      socket.emit('enter-the-room', id)
+    authStore(account: Account) {
+      this.account = account
     }
   },
 
-  persist: { enabled: true }
+  persist: { enabled: true, strategies: [{ storage: localStorage }] }
 })
+
+//------------------------------------------------------------------------------------------------
+//  Definitions
+//------------------------------------------------------------------------------------------------
+type Account = zod.infer<typeof AccountSchema>
+type Player = zod.infer<typeof PlayerSchema>

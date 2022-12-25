@@ -1,11 +1,9 @@
-import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-
 import piniaPersist from 'pinia-plugin-persist'
-
-import { vuetify } from '@/plugins'
+import { createApp } from 'vue'
 
 import App from '@/App.vue'
+import { vuetify } from '@/plugins'
 import router from '@/router'
 
 const app = createApp(App)

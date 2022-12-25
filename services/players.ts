@@ -1,4 +1,4 @@
-import type { Socket, Namespace } from 'socket.io'
+import type { Namespace, Socket } from 'socket.io'
 
 export default (master: Namespace, player: Socket) => {
   console.log('[io] player connected: ', player.id)

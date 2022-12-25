@@ -1,10 +1,10 @@
-<script setup lang="ts"></script>
+<script lang="ts" setup></script>
 
 <template>
   <v-main>
     <v-container fluid>
       <v-row justify="center">
-        <v-col>Room</v-col>
+        <v-col>Player Home</v-col>
       </v-row>
     </v-container>
   </v-main>

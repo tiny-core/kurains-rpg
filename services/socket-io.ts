@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+
 import masterConnected from './master'
 import playerConnected from './players'
 
