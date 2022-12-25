@@ -10,6 +10,7 @@ import firebase from '@/firebase'
 import { ROUTE_TO } from '@/router'
 import { AccountForm } from '@/schemas/player'
 import { usePlayerStore } from '@/stores'
+import { helpUseField } from '@/utils'
 
 //------------------------------------------------------------------------------------------------
 //  Variables
@@ -25,27 +26,26 @@ const { handleSubmit } = useForm<zod.infer<typeof AccountForm.SingUpSchema>>({
   initialValues: { email: '', password: '', passwordCheck: '' }
 })
 
-const email = useField<string>('email')
-const password = useField<string>('password')
-const passwordCheck = useField<string>('passwordCheck')
+const email = helpUseField<string>('email')
+const password = helpUseField<string>('password')
+const passwordCheck = helpUseField<string>('passwordCheck')
 
 //------------------------------------------------------------------------------------------------
 //  Actions
 //------------------------------------------------------------------------------------------------
 const onSubmit = handleSubmit(async (form) => {
   createUserWithEmailAndPassword(firebase.auth, form.email, form.password)
-    .then(({ user }) => {
-      router.push(ROUTE_TO.PROFILE)
-
-      console.log(user)
-
-      player.authStore({
+    .then(async ({ user }) => {
+      await player.authStore({
         uid: user.uid,
         email: user.email!,
         displayName: user.displayName!,
         photoURL: user.photoURL!,
-        refreshToken: user.refreshToken!
+        refreshToken: user.refreshToken!,
+        isAdministrator: false
       })
+
+      router.push(ROUTE_TO.PROFILE)
     })
     .catch(({ code, message }) => {
       console.log('[firebase]', code)
@@ -70,14 +70,14 @@ const onSubmit = handleSubmit(async (form) => {
             <v-divider></v-divider>
             <v-card-text>
               <v-text-field
-                v-model="email.value"
+                v-model="email.in.value"
                 :error-messages="email.errorMessage.value"
                 prepend-icon="mdi-account"
                 label="Email"
                 variant="solo"
               ></v-text-field>
               <v-text-field
-                v-model="password.value"
+                v-model="password.in.value"
                 :error-messages="password.errorMessage.value"
                 prepend-icon="mdi-lock"
                 label="Senha"
@@ -85,7 +85,7 @@ const onSubmit = handleSubmit(async (form) => {
                 variant="solo"
               ></v-text-field>
               <v-text-field
-                v-model="passwordCheck.value"
+                v-model="passwordCheck.in.value"
                 :error-messages="passwordCheck.errorMessage.value"
                 prepend-icon="mdi-lock-check"
                 label="Confirme a senha"

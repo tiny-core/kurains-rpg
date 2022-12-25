@@ -1,4 +1,5 @@
 export * from './account'
+export * from './administration'
 export { default as HomeView } from './HomeView.vue'
 export * from './player'
 export { default as RoomView } from './RoomView.vue'

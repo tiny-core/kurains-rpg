@@ -26,6 +26,7 @@ function logout() {
     <v-list-item
       :prepend-avatar="player.account.photoURL ?? imgUrl"
       :title="player.account.displayName ?? player.account.email"
+      :subtitle="player.account.displayName ? player.account.email : ''"
       class="mt-4"
       nav
     ></v-list-item>
@@ -40,6 +41,17 @@ function logout() {
         title="Novo Personagem"
       ></v-list-item>
       <v-list-item prepend-icon="mdi-account-group-outline" title="Meus Personagens"></v-list-item>
+
+      <v-divider v-if="player.account.isAdministrator" class="my-2"></v-divider>
+
+      <v-list-item
+        v-if="player.account.isAdministrator"
+        :to="ROUTE_TO.ADMINISTRATOR"
+        prepend-icon="mdi-shield-crown"
+        title="Administração"
+        class="mt-4"
+        nav
+      ></v-list-item>
     </v-list>
 
     <template v-slot:append>

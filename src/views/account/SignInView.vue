@@ -10,6 +10,7 @@ import { ERROR_CODE, firebase } from '@/firebase'
 import { ROUTE_TO } from '@/router'
 import { AccountForm } from '@/schemas/player'
 import { usePlayerStore } from '@/stores'
+import { helpUseField } from '@/utils'
 
 //------------------------------------------------------------------------------------------------
 //  Variables
@@ -25,24 +26,25 @@ const { handleSubmit } = useForm<zod.infer<typeof AccountForm.SignInSchema>>({
   initialValues: { email: '', password: '' }
 })
 
-const email = useField<string>('email')
-const password = useField<string>('password')
+const email = helpUseField<string>('email')
+const password = helpUseField<string>('password')
 
 //------------------------------------------------------------------------------------------------
 //  Actions
 //------------------------------------------------------------------------------------------------
 const onSubmit = handleSubmit((form) => {
   signInWithEmailAndPassword(firebase.auth, form.email, form.password)
-    .then(({ user }) => {
-      router.push(ROUTE_TO.PROFILE)
-
-      player.authStore({
+    .then(async ({ user }) => {
+      await player.authStore({
         uid: user.uid,
         email: user.email!,
         displayName: user.displayName!,
         photoURL: user.photoURL!,
-        refreshToken: user.refreshToken!
+        refreshToken: user.refreshToken!,
+        isAdministrator: false
       })
+
+      router.push(ROUTE_TO.PROFILE)
     })
     .catch(({ code, message }) => {
       switch (code) {
@@ -81,7 +83,7 @@ const onSubmit = handleSubmit((form) => {
               <v-divider></v-divider>
               <v-card-text>
                 <v-text-field
-                  v-model="email.value"
+                  v-model="email.in.value"
                   :error-messages="email.errorMessage.value"
                   prepend-icon="mdi-account"
                   label="Email"
@@ -89,7 +91,7 @@ const onSubmit = handleSubmit((form) => {
                 ></v-text-field>
 
                 <v-text-field
-                  v-model="password.value"
+                  v-model="password.in.value"
                   :error-messages="password.errorMessage.value"
                   prepend-icon="mdi-lock"
                   label="Senha"

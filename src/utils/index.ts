@@ -1,3 +1,4 @@
+import { useField } from 'vee-validate'
 import * as zod from 'zod'
 
 import { JobSchema } from '@/schemas/npc/human'
@@ -55,6 +56,11 @@ const jobs: Array<TypeJobSchema> = [
 ]
 
 export const list = { origins, jobs }
+
+export function helpUseField<T>(field: string) {
+  const { value, errorMessage, setValue } = useField<T>(field)
+  return { in: value, setValue, errorMessage }
+}
 
 //------------------------------------------------------------------------------------------------
 //  Definitions

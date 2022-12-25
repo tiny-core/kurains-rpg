@@ -28,18 +28,17 @@ function googleAuth() {
   openGooglePopUp.value = true
 
   signInWithPopup(firebase.auth, provider)
-    .then(({ user }) => {
-      router.push(ROUTE_TO.PROFILE)
-
-      console.log(user)
-
-      player.authStore({
+    .then(async ({ user }) => {
+      await player.authStore({
         uid: user.uid,
         email: user.email!,
         displayName: user.displayName!,
         photoURL: user.photoURL!,
-        refreshToken: user.refreshToken!
+        refreshToken: user.refreshToken!,
+        isAdministrator: false
       })
+
+      router.push(ROUTE_TO.PROFILE)
     })
     .catch(({ code }) => {
       console.log('[firebase]', code)
@@ -51,7 +50,7 @@ function googleAuth() {
 //------------------------------------------------------------------------------------------------
 //  Vue hooks
 //------------------------------------------------------------------------------------------------
-onMounted(() => {})
+onMounted(() => (openGooglePopUp.value = false))
 </script>
 
 <template>

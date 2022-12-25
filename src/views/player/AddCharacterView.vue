@@ -13,6 +13,9 @@ import { list } from '@/utils'
 //------------------------------------------------------------------------------------------------
 //  Variables
 //------------------------------------------------------------------------------------------------
+const selectedJob = ref<TypeJobSchema>(list.jobs[0])
+const { xs, sm } = useDisplay()
+
 const { handleSubmit } = useForm<zod.infer<typeof CharacterSchema>>({
   validationSchema: toFormValidator(CharacterSchema),
   initialValues: {
@@ -22,32 +25,24 @@ const { handleSubmit } = useForm<zod.infer<typeof CharacterSchema>>({
     defense: 0,
     expertises: [],
     inventory: { slots: { used: 0, total: 10 }, items: [] },
-    job: { main: list.jobs[0].main, specialization: '' },
+    job: { main: list.jobs[0].main, specialization: list.jobs[0].specialization[0] },
     level: 0,
     name: '',
     origin: '',
+    description: '',
     prestige: 1,
     protection: [],
     resistance: [],
     rituals: [],
     stats: {
-      life: { current: 0, total: 1 },
-      mana: { current: 0, total: 1 },
-      sanity: { current: 0, total: 1 }
+      life: { current: 1, total: 1 },
+      mana: { current: 1, total: 1 },
+      sanity: { current: 1, total: 1 }
     }
   }
 })
 
-const { xs, sm, md, lg } = useDisplay()
-
 //------------------------------------------------------------------------------------------------
-
-function helpUseField<T>(field: string) {
-  const { value, errorMessage, setValue } = useField<T>(field)
-  return { in: value, setValue, errorMessage }
-}
-
-const selectedJob = ref<TypeJobSchema>(list.jobs[0])
 
 const name = helpUseField<string>('name')
 const age = helpUseField<number>('age')
@@ -56,15 +51,22 @@ const prestige = helpUseField<string>('prestige')
 const origin = helpUseField<string>('origin')
 const jobMain = helpUseField<string>('job.main')
 const jobSpecialization = helpUseField<string>('job.specialization')
+const description = helpUseField<string>('description')
+const level = helpUseField<string>('level')
 
 //------------------------------------------------------------------------------------------------
 
-const lifeCurrent = helpUseField<number>('stats.life.current')
 const lifeTotal = helpUseField<number>('stats.life.total')
-const sanityCurrent = helpUseField<number>('stats.sanity.current')
 const sanityTotal = helpUseField<number>('stats.sanity.total')
-const manaCurrent = helpUseField<number>('stats.mana.current')
 const manaTotal = helpUseField<number>('stats.mana.total')
+
+//------------------------------------------------------------------------------------------------
+
+const agility = helpUseField<number>('attributes.agility')
+const intelligence = helpUseField<number>('attributes.intelligence')
+const presence = helpUseField<number>('attributes.presence')
+const strength = helpUseField<number>('attributes.strength')
+const vitality = helpUseField<number>('attributes.vitality')
 
 //------------------------------------------------------------------------------------------------
 //  Actions
@@ -72,6 +74,11 @@ const manaTotal = helpUseField<number>('stats.mana.total')
 const onSubmit = handleSubmit((form) => {
   console.log(form)
 })
+
+function helpUseField<T>(field: string) {
+  const { value, errorMessage, setValue } = useField<T>(field)
+  return { in: value, setValue, errorMessage }
+}
 
 //------------------------------------------------------------------------------------------------
 //  Vue Hooks
@@ -99,12 +106,22 @@ watch(selectedJob, (v) => [
               <v-divider class="my-2"></v-divider>
               <v-container>
                 <v-row>
-                  <v-col cols="12">
+                  <v-col :cols="xs ? 12 : 6">
                     <v-text-field
                       v-model="name.in.value"
                       :error-messages="name.errorMessage.value"
                       prepend-inner-icon="mdi-account-box-multiple"
                       label="Nome"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col :cols="xs ? 12 : 6">
+                    <v-text-field
+                      v-model.number="level.in.value"
+                      :error-messages="level.errorMessage.value"
+                      prepend-inner-icon="mdi-upload-multiple"
+                      label="Level (NEX)"
+                      type="number"
                       variant="solo"
                     ></v-text-field>
                   </v-col>
@@ -175,22 +192,28 @@ watch(selectedJob, (v) => [
               </v-container>
             </v-card>
 
+            <v-card prepend-icon="mdi-note-plus" class="mb-4">
+              <template v-slot:title> Informações extras </template>
+              <v-divider class="my-2"></v-divider>
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-textarea
+                      v-model.number="description.in.value"
+                      :error-messages="description.errorMessage.value"
+                      variant="solo"
+                    ></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card>
+
             <v-card prepend-icon="mdi-note-text" class="mb-4">
               <template v-slot:title> Status </template>
               <v-divider class="my-2"></v-divider>
               <v-container>
                 <v-row>
-                  <v-col :cols="xs ? 12 : 6">
-                    <v-text-field
-                      v-model.number="lifeCurrent.in.value"
-                      :error-messages="lifeCurrent.errorMessage.value"
-                      prepend-inner-icon="mdi-heart-half-full"
-                      label="Vida atual"
-                      type="number"
-                      variant="solo"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col :cols="xs ? 12 : 6">
+                  <v-col :cols="xs ? 12 : 4">
                     <v-text-field
                       v-model.number="lifeTotal.in.value"
                       :error-messages="lifeTotal.errorMessage.value"
@@ -200,17 +223,8 @@ watch(selectedJob, (v) => [
                       variant="solo"
                     ></v-text-field>
                   </v-col>
-                  <v-col :cols="xs ? 12 : 6">
-                    <v-text-field
-                      v-model.number="sanityCurrent.in.value"
-                      :error-messages="sanityCurrent.errorMessage.value"
-                      prepend-inner-icon="mdi-head-snowflake-outline"
-                      label="Sanidade atual"
-                      type="number"
-                      variant="solo"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col :cols="xs ? 12 : 6">
+
+                  <v-col :cols="xs ? 12 : 4">
                     <v-text-field
                       v-model.number="sanityTotal.in.value"
                       :error-messages="sanityTotal.errorMessage.value"
@@ -220,17 +234,8 @@ watch(selectedJob, (v) => [
                       variant="solo"
                     ></v-text-field>
                   </v-col>
-                  <v-col :cols="xs ? 12 : 6">
-                    <v-text-field
-                      v-model.number="manaCurrent.in.value"
-                      :error-messages="manaCurrent.errorMessage.value"
-                      label="Pontos de esforços atuais"
-                      prepend-inner-icon="mdi-battery-outline"
-                      type="number"
-                      variant="solo"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col :cols="xs ? 12 : 6">
+
+                  <v-col :cols="xs ? 12 : 4">
                     <v-text-field
                       v-model.number="manaTotal.in.value"
                       :error-messages="manaTotal.errorMessage.value"
@@ -245,11 +250,60 @@ watch(selectedJob, (v) => [
             </v-card>
 
             <v-card prepend-icon="mdi-one-up" class="mb-4">
-              <template v-slot:title> Atributos </template>
+              <template v-slot:title> Atributos</template>
               <v-divider class="my-2"></v-divider>
               <v-container>
-                <v-row>
-                  <v-col :cols="xs ? 12 : 6"></v-col>
+                <v-row justify="center">
+                  <v-col :cols="xs ? 12 : 4">
+                    <v-text-field
+                      v-model.number="strength.in.value"
+                      :error-messages="strength.errorMessage.value"
+                      prepend-inner-icon="mdi-account-box-multiple"
+                      label="Força"
+                      type="number"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col :cols="xs ? 12 : 4">
+                    <v-text-field
+                      v-model.number="vitality.in.value"
+                      :error-messages="vitality.errorMessage.value"
+                      prepend-inner-icon="mdi-account-box-multiple"
+                      label="Vitalidade"
+                      type="number"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col :cols="xs ? 12 : 4">
+                    <v-text-field
+                      v-model.number="agility.in.value"
+                      :error-messages="agility.errorMessage.value"
+                      prepend-inner-icon="mdi-account-box-multiple"
+                      label="Agilidade"
+                      type="number"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col :cols="xs ? 12 : 4">
+                    <v-text-field
+                      v-model.number="presence.in.value"
+                      :error-messages="presence.errorMessage.value"
+                      prepend-inner-icon="mdi-account-box-multiple"
+                      label="Presença"
+                      type="number"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col :cols="xs ? 12 : 4">
+                    <v-text-field
+                      v-model.number="intelligence.in.value"
+                      :error-messages="intelligence.errorMessage.value"
+                      prepend-inner-icon="mdi-account-box-multiple"
+                      label="Inteligencia"
+                      type="number"
+                      variant="solo"
+                    ></v-text-field>
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card>

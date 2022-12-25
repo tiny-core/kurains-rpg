@@ -1,13 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { AddCharacterView, HomeView, PlayerView, SignInView, SignUpView } from '@/views'
+import {
+  AddCharacterView,
+  AdminMainView,
+  HomeView,
+  PlayerView,
+  SignInView,
+  SignUpView
+} from '@/views'
 
 export enum ROUTE_TO {
   HOME = '/',
   SIGN_IN = '/sign-in',
   SIGN_UP = '/sign-up',
   PROFILE = '/profile',
-  PROFILE_CHARACTER_CREATE = '/profile/characters/create'
+  PROFILE_CHARACTER_CREATE = '/profile/characters/create',
+  ADMINISTRATOR = '/admin'
 }
 
 const router = createRouter({
@@ -25,27 +33,39 @@ const router = createRouter({
     {
       name: ROUTE_TO.PROFILE_CHARACTER_CREATE,
       path: ROUTE_TO.PROFILE_CHARACTER_CREATE,
-      meta: { isPrivate: true },
-      component: AddCharacterView
+      component: AddCharacterView,
+      meta: { isPrivate: true }
+    },
+    {
+      name: ROUTE_TO.ADMINISTRATOR,
+      path: ROUTE_TO.ADMINISTRATOR,
+      component: AdminMainView,
+      meta: { isAdminOnly: true }
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
   const isPrivate = to.matched.some((record) => record.meta.isPrivate)
+  const isAdminOnly = to.matched.some((record) => record.meta.isAdminOnly)
 
   let isAuthenticated = false
+  let isAdministrator = false
 
   try {
-    isAuthenticated = JSON.parse(localStorage.getItem('player') ?? '').account.uid !== ''
+    const user = JSON.parse(localStorage.getItem('player') ?? '{}')
+    isAuthenticated = user.account.uid !== ''
+    isAdministrator = user.account.isAdministrator
   } catch (error) {
     isAuthenticated = false
+    isAdministrator = false
   }
 
+  if (isAdminOnly) return isAdministrator ? next() : next(ROUTE_TO.PROFILE)
   if (isPrivate && !isAuthenticated) return next(ROUTE_TO.SIGN_IN)
   if (!isPrivate && isAuthenticated) return next(ROUTE_TO.PROFILE)
 
-  next()
+  return next()
 })
 
 export default router

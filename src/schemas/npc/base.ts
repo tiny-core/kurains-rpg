@@ -13,7 +13,7 @@ const StatsSchema = zod.object({
   mana: StatsItemsSchema
 })
 
-const ExpertiseSchema = zod.object({
+export const ExpertiseSchema = zod.object({
   uid: zod.string().trim().uuid(),
   name: zod.string().trim().min(1),
   abilitiesCheck: zod.enum([
@@ -23,7 +23,6 @@ const ExpertiseSchema = zod.object({
     'presence',
     'vitality'
   ] as const),
-  trained: zod.enum(['T', 'E', 'V']),
   level: zod.number().int()
 })
 
@@ -59,8 +58,15 @@ const InventorySchema = zod.object({
 
 export const NPCSchema = zod.object({
   name: zod.string().trim().min(5),
-  level: zod.number().int().min(0),
+  level: zod
+    .number()
+    .int()
+    .min(0)
+    .max(100)
+    .refine((v) => v % 5 === 0)
+    .default(0),
   expertises: zod.array(ExpertiseSchema),
+  description: zod.string().trim(),
   stats: StatsSchema,
   inventory: InventorySchema,
   attributes: AttributesSchema

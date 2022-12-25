@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { getDatabase } from 'firebase/database'
+import { getFirestore } from 'firebase/firestore'
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_API_KEY,
@@ -13,7 +13,7 @@ const app = initializeApp({
   measurementId: import.meta.env.VITE_MEASUREMENT_ID
 })
 
-const firestore = getDatabase(app)
+const firestore = getFirestore(app)
 const auth = getAuth(app)
 
 export enum ERROR_CODE {

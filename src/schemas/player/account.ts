@@ -17,5 +17,6 @@ export const AccountSchema = zod.object({
   email: zod.string().trim().min(1),
   displayName: zod.string().trim().min(1),
   photoURL: zod.string().trim().optional(),
-  refreshToken: zod.string().trim().min(1)
+  refreshToken: zod.string().trim().min(1),
+  isAdministrator: zod.boolean().optional().default(false)
 })
