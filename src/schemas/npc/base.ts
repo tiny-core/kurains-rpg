@@ -13,16 +13,18 @@ const StatsSchema = zod.object({
   mana: StatsItemsSchema
 })
 
+export const abilitiesCheckList = [
+  { name: 'Agilidade', value: 0 },
+  { name: 'Força', value: 1 },
+  { name: 'Inteligencia', value: 2 },
+  { name: 'Presença', value: 3 },
+  { name: 'Vitalidade', value: 4 }
+] as const
+
 export const ExpertiseSchema = zod.object({
-  uid: zod.string().trim().uuid(),
   name: zod.string().trim().min(1),
-  abilitiesCheck: zod.enum([
-    'agility',
-    'strength',
-    'intelligence',
-    'presence',
-    'vitality'
-  ] as const),
+  // 0: agility | 1: strength | 2: intelligence | 3: presence | 4: vitality
+  abilitiesCheck: zod.number().int().min(0).max(4),
   level: zod.number().int()
 })
 
@@ -34,11 +36,25 @@ const AttributesSchema = zod.object({
   vitality: zod.number().min(0)
 })
 
+export const categoryList = [
+  { name: 'Item', value: 0 },
+  { name: 'Arma', value: 1 },
+  { name: 'Armadura', value: 2 }
+]
+
+export const rangeList = [
+  { name: 'Não possui', value: 0 },
+  { name: 'Curto', value: 1 },
+  { name: 'Médio', value: 2 },
+  { name: 'Longo', value: 3 }
+]
+
 const ItemSchema = zod.object({
-  uid: zod.string().trim().uuid(),
   name: zod.string().trim().min(1),
-  category: zod.enum(['Any', 'Weapon', 'Armor']),
-  range: zod.enum(['', 'Short', 'Medium', 'Long']),
+  // 0: Any ! 1: Weapon | 2: Armor
+  category: zod.number().int().min(0).max(2),
+  // 0: Empty | 2: Short | 3: Medium | 4: Long
+  range: zod.number().int().min(0).max(4),
   effect: zod.string().trim().min(1),
   damage: zod.number().int().min(0),
   rarity: zod.number().int().min(0).max(4),

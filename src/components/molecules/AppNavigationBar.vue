@@ -1,32 +1,25 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router'
-
 import { ROUTE_TO } from '@/router'
-import { usePlayerStore } from '@/stores'
-
-const imgUrl = new URL('@/assets/people.png', import.meta.url).href
+import { useAccountStore } from '@/stores'
 
 //------------------------------------------------------------------------------------------------
 //  Variables
 //------------------------------------------------------------------------------------------------
-const player = usePlayerStore()
-const router = useRouter()
+const accountStore = useAccountStore()
+
+const imgUrl = new URL('@/assets/people.png', import.meta.url).href
 
 //------------------------------------------------------------------------------------------------
 //  Actions
 //------------------------------------------------------------------------------------------------
-function logout() {
-  player.$reset()
-  router.push(ROUTE_TO.SIGN_IN)
-}
 </script>
 
 <template>
-  <v-navigation-drawer expand-on-hover rail permanent>
+  <v-navigation-drawer v-if="accountStore.isConnected" expand-on-hover rail permanent>
     <v-list-item
-      :prepend-avatar="player.account.photoURL ?? imgUrl"
-      :title="player.account.displayName ?? player.account.email"
-      :subtitle="player.account.displayName ? player.account.email : ''"
+      :prepend-avatar="accountStore.profile.photoURL ?? imgUrl"
+      :title="accountStore.profile.displayName ?? accountStore.profile.email"
+      :subtitle="accountStore.profile.displayName ? accountStore.profile.email : ''"
       class="mt-4"
       nav
     ></v-list-item>
@@ -34,19 +27,19 @@ function logout() {
     <v-divider class="my-2"></v-divider>
 
     <v-list density="compact" nav>
-      <v-list-item :to="ROUTE_TO.PROFILE" prepend-icon="mdi-home" title="Inicio"></v-list-item>
       <v-list-item
-        :to="ROUTE_TO.PROFILE_CHARACTER_CREATE"
-        prepend-icon="mdi-account-plus"
-        title="Novo Personagem"
+        :to="{ name: ROUTE_TO.HOME }"
+        prepend-icon="mdi-home"
+        title="Inicio"
       ></v-list-item>
+      <v-list-item prepend-icon="mdi-account-plus" title="Novo Personagem"></v-list-item>
       <v-list-item prepend-icon="mdi-account-group-outline" title="Meus Personagens"></v-list-item>
 
-      <v-divider v-if="player.account.isAdministrator" class="my-2"></v-divider>
+      <v-divider v-if="accountStore.profile.isAdministrator" class="my-2"></v-divider>
 
       <v-list-item
-        v-if="player.account.isAdministrator"
-        :to="ROUTE_TO.ADMINISTRATOR"
+        v-if="accountStore.profile.isAdministrator"
+        :to="{ name: ROUTE_TO.ADMINISTRATOR }"
         prepend-icon="mdi-shield-crown"
         title="Administração"
         class="mt-4"
@@ -59,7 +52,7 @@ function logout() {
         prepend-icon="mdi-logout-variant"
         title="Desconectar"
         class="mb-2"
-        @click="logout"
+        @click="accountStore.signOut"
       ></v-list-item>
     </template>
   </v-navigation-drawer>

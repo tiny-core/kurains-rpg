@@ -1,2 +1,1 @@
-export * from './master'
-export * from './player'
+export * from './account'

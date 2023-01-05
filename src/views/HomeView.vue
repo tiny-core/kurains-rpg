@@ -1,22 +1,9 @@
 <script lang="ts" setup>
-import { onBeforeMount } from 'vue'
-import { useRouter } from 'vue-router'
-
-import { ROUTE_TO } from '@/router'
-
-//------------------------------------------------------------------------------------------------
-//  Variables
-//------------------------------------------------------------------------------------------------
-const router = useRouter()
-
-//------------------------------------------------------------------------------------------------
-//  Vue hooks
-//------------------------------------------------------------------------------------------------
-onBeforeMount(() => router.push(ROUTE_TO.SIGN_IN))
+console.log(import.meta.env.VITE_RE_CAPTCHA_SECRET)
 </script>
 
 <template>
-  <v-main>Home</v-main>
+  <div>Home</div>
 </template>
 
 <style scoped></style>

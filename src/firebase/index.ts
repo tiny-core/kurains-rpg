@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+// import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check'
+import { enableIndexedDbPersistence, getFirestore } from 'firebase/firestore'
 
 const app = initializeApp({
   apiKey: import.meta.env.VITE_API_KEY,
@@ -13,16 +14,14 @@ const app = initializeApp({
   measurementId: import.meta.env.VITE_MEASUREMENT_ID
 })
 
+// const appCheck = initializeAppCheck(app, {
+//   provider: new ReCaptchaV3Provider(import.meta.env.VITE_RE_CAPTCHA_SECRET),
+//   isTokenAutoRefreshEnabled: true
+// })
+
 const firestore = getFirestore(app)
 const auth = getAuth(app)
 
-export enum ERROR_CODE {
-  AUTH_WRONG_PASSWORD = 'auth/wrong-password',
-  AUTH_USER_NOT_FOUND = 'auth/user-not-found',
-  AUTH_TOO_MANY_REQUESTS = 'auth/too-many-requests',
-  AUTH_POPUP_CLOSED_BY_USER = 'auth/popup-closed-by-user'
-}
+enableIndexedDbPersistence(firestore).catch((err) => console.log(err))
 
-export const firebase = { app, auth, firestore }
-
-export default firebase
+export { auth, firestore }
